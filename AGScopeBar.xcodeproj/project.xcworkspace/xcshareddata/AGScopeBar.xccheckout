@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>C7C143E4-71E0-4F06-943B-DBC3BEBA149C</string>
+	<key>IDESourceControlProjectName</key>
+	<string>AGScopeBar</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>7F3B3D2DA2DC1B6B6090AB9CB918652112988C1D</key>
+		<string>https://github.com/liushigit/AGScopeBar.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>AGScopeBar.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>7F3B3D2DA2DC1B6B6090AB9CB918652112988C1D</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/liushigit/AGScopeBar.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>7F3B3D2DA2DC1B6B6090AB9CB918652112988C1D</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>7F3B3D2DA2DC1B6B6090AB9CB918652112988C1D</string>
+			<key>IDESourceControlWCCName</key>
+			<string>AGScopeBar</string>
+		</dict>
+	</array>
+</dict>
+</plist>

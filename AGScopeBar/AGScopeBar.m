@@ -53,16 +53,21 @@
 
 #pragma mark  
 @interface AGScopeBarPopupButtonCell : NSPopUpButtonCell {
-	NSButton * mRecessedButton;
-	NSPopUpButtonCell * mPopupCell;
+	
+}
+@end
+
+@interface AGScopeBarPopupButtonCell () {
+    NSButton * mRecessedButton;
+    NSPopUpButtonCell * mPopupCell;
 }
 @end
 
 
 @interface AGScopeBarItem ()
-@property (nonatomic, readwrite, assign) AGScopeBarGroup * group;
-@property (nonatomic, readonly) NSButton * button;
-@property (nonatomic, readonly) NSMenuItem * menuItem;
+@property (weak, nonatomic, readwrite) AGScopeBarGroup * group;
+@property (weak, nonatomic, readonly) NSButton * button;
+@property (weak, nonatomic, readonly) NSMenuItem * menuItem;
 
 - (void)_setSelected:(BOOL)isSelected;
 - (void)_recreateButton;
@@ -73,7 +78,7 @@
 
 
 @interface AGScopeBarGroup ()
-@property (nonatomic, readwrite, assign) AGScopeBar * scopeBar;
+@property (nonatomic, readwrite, weak) AGScopeBar * scopeBar;
 @property (nonatomic, readwrite, assign) BOOL isCollapsed;
 @property (nonatomic, readonly) NSView * view;
 @property (nonatomic, readonly) NSView * collapsedView;
@@ -106,7 +111,7 @@
 	}
 	
 	mSmartResizeEnabled = YES;
-	mGroups = [[NSArray array] retain];
+	mGroups = [NSArray array];
 	mIsEnabled = YES;
 	
 	{
@@ -165,10 +170,6 @@
 		group.scopeBar = nil;
 	}
 	
-	[mAccessoryView release];
-	[mGroups release];
-	[mScopeBarAppearance release];
-	[super dealloc];
 }
 
 
@@ -219,9 +220,8 @@
 {
 	if (mAccessoryView != accessoryView) {
 		[mAccessoryView removeFromSuperview];
-		[mAccessoryView autorelease];
 		
-		mAccessoryView = [accessoryView retain];
+		mAccessoryView = accessoryView;
 		[self tile];
 	}
 }
@@ -240,7 +240,6 @@
 		group.scopeBar = nil;
 	}
 	
-	[mGroups autorelease];
 	mGroups = [groups copy];
 	
 	for (AGScopeBarGroup * group in mGroups) {
@@ -337,7 +336,7 @@
 
 - (void)insertGroup:(AGScopeBarGroup *)group atIndex:(NSUInteger)index;
 {
-	NSMutableArray * groups = [[self.groups mutableCopy] autorelease];
+	NSMutableArray * groups = [self.groups mutableCopy];
 	[groups insertObject:group atIndex:index];
 	self.groups = groups;
 }
@@ -345,7 +344,7 @@
 
 - (void)removeGroupAtIndex:(NSUInteger)index;
 {
-	NSMutableArray * groups = [[self.groups mutableCopy] autorelease];
+	NSMutableArray * groups = [self.groups mutableCopy];
 	[groups removeObjectAtIndex:index];
 	self.groups = groups;
 }
@@ -426,11 +425,11 @@
 	// Draw gradient background
 	NSGradient * gradient = nil;
 	if (isWindowActive) {
-		gradient = [[[NSGradient alloc] initWithStartingColor:self.scopeBarAppearance.backgroundBottomColor
-												  endingColor:self.scopeBarAppearance.backgroundTopColor] autorelease];
+		gradient = [[NSGradient alloc] initWithStartingColor:self.scopeBarAppearance.backgroundBottomColor
+												  endingColor:self.scopeBarAppearance.backgroundTopColor];
 	} else {
-		gradient = [[[NSGradient alloc] initWithStartingColor:self.scopeBarAppearance.inactiveBackgroundBottomColor
-												  endingColor:self.scopeBarAppearance.inactiveBackgroundTopColor] autorelease];
+		gradient = [[NSGradient alloc] initWithStartingColor:self.scopeBarAppearance.inactiveBackgroundBottomColor
+												  endingColor:self.scopeBarAppearance.inactiveBackgroundTopColor];
 	}
 	
 	[gradient drawInRect:self.bounds angle:90.0];
@@ -474,7 +473,7 @@
 	
 	
 	// Remove all group views (clears out any old ones too)
-	for (NSView * view in [[self.subviews copy] autorelease]) {
+	for (NSView * view in [self.subviews copy]) {
 		[view removeFromSuperview];
 	}
 	
@@ -602,7 +601,7 @@
 
 + (AGScopeBarGroup *)groupWithIdentifier:(NSString *)identifier;
 {
-	return [[[[self class] alloc] initWithIdentifier:identifier] autorelease];
+	return [[[self class] alloc] initWithIdentifier:identifier];
 }
 
 
@@ -612,7 +611,7 @@
 		return nil;
 	}
 	
-	mIdentifier = [identifier retain];
+	mIdentifier = identifier;
 	mItems = [[NSArray alloc] init];
 	mSelectedItems = [[NSArray alloc] init];
 	mShowsSeparator = YES;
@@ -633,7 +632,7 @@
 	mCollapsedLabelField.drawsBackground = NO;
 	
 	mGroupPopupButton = [[NSPopUpButton alloc] initWithFrame:NSZeroRect pullsDown:NO];
-	mGroupPopupButton.cell = [[[AGScopeBarPopupButtonCell alloc] initTextCell:@"" pullsDown:NO] autorelease];
+	mGroupPopupButton.cell = [[AGScopeBarPopupButtonCell alloc] initTextCell:@"" pullsDown:NO];
 	mGroupPopupButton.menu.autoenablesItems = NO;
 	mGroupPopupButton.menu.delegate = self;
 	
@@ -657,17 +656,7 @@
 		item.group = nil;
 	}
 	
-	[mIdentifier release];
-	[mLabel release];
-	[mItems release];
-	[mSelectedItems release];
 	
-	[mView release];
-	[mLabelField release];
-	[mCollapsedView release];
-	[mGroupPopupButton release];
-	[mCollapsedLabelField release];
-	[super dealloc];
 }
 
 
@@ -684,8 +673,7 @@
 
 - (void)setLabel:(NSString *)label;
 {
-	[mLabel autorelease];
-	mLabel = [label retain];
+	mLabel = label;
 	
 	[self.scopeBar setNeedsTiling];
 }
@@ -770,7 +758,6 @@
 		item.group = nil;
 	}
 	
-	[mItems autorelease];
 	mItems = [items copy];
 	if (!mItems) mItems = [[NSArray alloc] init];
 	
@@ -793,7 +780,7 @@
 
 - (NSArray *)selectedItems;
 {
-	return [[mSelectedItems retain] autorelease];
+	return mSelectedItems;
 }
 
 
@@ -833,7 +820,7 @@
 
 - (void)insertItem:(AGScopeBarItem *)item atIndex:(NSUInteger)index;
 {
-	NSMutableArray * items = [[self.items mutableCopy] autorelease];
+	NSMutableArray * items = [self.items mutableCopy];
 	[items insertObject:item atIndex:index];
 	self.items = items;
 }
@@ -841,7 +828,7 @@
 
 - (void)removeItemAtIndex:(NSUInteger)index;
 {
-	NSMutableArray * items = [[self.items mutableCopy] autorelease];
+	NSMutableArray * items = [self.items mutableCopy];
 	[items removeObjectAtIndex:index];
 	self.items = items;
 }
@@ -917,7 +904,7 @@
 	// Full View
 	// -----------------------------------------
 	{
-		for (NSView * view in [[self.view.subviews copy] autorelease]) {
+		for (NSView * view in [self.view.subviews copy]) {
 			[view removeFromSuperview];
 		}
 		
@@ -1006,7 +993,7 @@
 			if (YES) { //self.allowsMultipleSelection) {
 				NSPopUpButtonCell * cell = [mGroupPopupButton cell];
 				cell.usesItemFromMenu = NO;
-				cell.menuItem = [[[NSMenuItem alloc] init] autorelease];
+				cell.menuItem = [[NSMenuItem alloc] init];
 				[self _updatePopup];
 			}
 			
@@ -1145,9 +1132,9 @@
 		}
 	} else {
 		
-		NSMutableArray * items = [[oldSelectedItems mutableCopy] autorelease];
+		NSMutableArray * items = [oldSelectedItems mutableCopy];
 		[items removeObject:item];
-		newSelectedItems = [[items copy] autorelease];
+		newSelectedItems = [items copy];
 		
 		if (self.requiresSelection) {
 			if (newSelectedItems.count == 0) {
@@ -1195,7 +1182,6 @@
 {
 	NSArray * oldSelectedItems = mSelectedItems;
 	
-	[mSelectedItems autorelease];
 	mSelectedItems = [newSelectedItems copy];
 	
 	for (AGScopeBarItem * item in self.items) {
@@ -1259,7 +1245,7 @@
 
 + (AGScopeBarItem *)itemWithIdentifier:(NSString *)identifier;
 {
-	return [[[[self class] alloc] initWithIdentifier:identifier] autorelease];
+	return [[[self class] alloc] initWithIdentifier:identifier];
 }
 
 
@@ -1270,7 +1256,7 @@
 		return nil;
 	}
 	
-	mIdentifier = [identifier retain];
+	mIdentifier = identifier;
 	mIsEnabled = YES;
 	
 	return self;
@@ -1286,16 +1272,6 @@
 
 
 
-- (void)dealloc
-{
-	[mIdentifier release];
-	[mTitle release];
-	[mImage release];
-	[mMenu release];
-	[mButton release];
-	[mMenuItem release];
-	[super dealloc];
-}
 
 
 
@@ -1308,7 +1284,6 @@
 
 - (void)setTitle:(NSString *)title;
 {
-	[mTitle autorelease];
 	mTitle = [title copy];
 	
 	[self _updateButton];
@@ -1325,7 +1300,6 @@
 
 - (void)setToolTip:(NSString *)tooltip;
 {
-	[mToolTip autorelease];
 	mToolTip = [tooltip copy];
 	
 	[self _updateButton];
@@ -1342,7 +1316,6 @@
 
 - (void)setImage:(NSImage *)image;
 {
-	[mImage autorelease];
 	mImage = [image copy];
 	[mImage setSize:NSMakeSize(SCOPE_BAR_BUTTON_IMAGE_SIZE, SCOPE_BAR_BUTTON_IMAGE_SIZE)];
 	[self _updateButton];
@@ -1357,8 +1330,7 @@
 
 - (void)setMenu:(NSMenu *)menu;
 {
-	[mMenu autorelease];
-	mMenu = [menu retain];
+	mMenu = menu;
 	[self _updateButton];
 }
 
@@ -1440,10 +1412,10 @@
 	// --------------------------------------------
 	if (self.menu) {
 		BOOL pullsDown = (self.title != nil); // Popups get their title from the selected item, so having a title means a pulldown. Use @"" if needed.
-		AGScopeBarPopupButtonCell * cell = [[[AGScopeBarPopupButtonCell alloc] initTextCell:@"" pullsDown:pullsDown] autorelease];
-		NSMenuItem * titleItem = [[[NSMenuItem alloc] init] autorelease];
+		AGScopeBarPopupButtonCell * cell = [[AGScopeBarPopupButtonCell alloc] initTextCell:@"" pullsDown:pullsDown];
+		NSMenuItem * titleItem = [[NSMenuItem alloc] init];
 		
-		button = [[[NSPopUpButton alloc] initWithFrame:NSZeroRect pullsDown:pullsDown] autorelease];
+		button = [[NSPopUpButton alloc] initWithFrame:NSZeroRect pullsDown:pullsDown];
 		[button setCell:cell];
 		[cell setMenu:self.menu];
 		[cell setUsesItemFromMenu:NO];
@@ -1467,7 +1439,7 @@
 		// Standard Button
 		// --------------------------------------------
 	} else {
-		button = [[[NSButton alloc] initWithFrame:NSZeroRect] autorelease];
+		button = [[NSButton alloc] initWithFrame:NSZeroRect];
 	}
 	
 	
@@ -1499,8 +1471,7 @@
 	
 	// ------------------------
 	[mButton removeFromSuperview];
-	[mButton release];
-	mButton = [button retain];
+	mButton = button;
 }
 
 
@@ -1605,12 +1576,6 @@
 
 
 
-- (void)dealloc
-{
-	[mPopupCell release];
-	[mRecessedButton release];
-	[super dealloc];
-}
 
 
 
@@ -1758,21 +1723,6 @@
 
 @implementation AGScopeBarAppearance
 
-- (void)dealloc
-{
-	self.backgroundTopColor = nil;
-	self.backgroundBottomColor = nil;
-	self.inactiveBackgroundTopColor = nil;
-	self.inactiveBackgroundBottomColor = nil;
-	self.borderBottomColor = nil;
-	self.separatorColor = nil;
-	self.labelColor = nil;
-	self.labelFont = nil;
-	self.itemButtonFont = nil;
-	self.menuItemFont = nil;
-	
-	[super dealloc];
-}
 
 
 @synthesize backgroundTopColor;

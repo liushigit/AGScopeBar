@@ -39,12 +39,6 @@
 }
 
 
-- (void)dealloc
-{
-	[popupCell release];
-	[recessedButton release];
-	[super dealloc];
-}
 
 
 
